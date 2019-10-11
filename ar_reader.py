@@ -52,7 +52,6 @@ class Arreader():
             print("Not fonund")
             self.pub.publish(msg)
         else:
-
             rvecs, tvecs, _objPoints = self.aruco.estimatePoseSingleMarkers(
                 corners, self.ar_length, self.cm.K, self.cm.D)
             print(ids)
