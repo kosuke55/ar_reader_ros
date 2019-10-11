@@ -48,13 +48,13 @@ class Arreader():
             gray, self.dictionary, None, None,
             params, self.cm.K, self.cm.D)
         if(ids is None):
-            rospy.logwarm("Not fonund")
+            rospy.logwarn("Not fonund")
             self.pub.publish(msg)
         else:
             rvecs, tvecs, _objPoints = self.aruco.estimatePoseSingleMarkers(
                 corners, self.ar_length, self.cm.K, self.cm.D)
-            rospy.loginfo("Found No.{} marker".format(ids[0, 0]))
             for i in range(ids.size):
+                rospy.loginfo("Found No.{} marker".format(ids[i][0]))
                 rot_matrix = np.eye(4)
                 rot_matrix[:3, :3] = cv2.Rodrigues(rvecs[i][0])[0]
                 self.br.sendTransform((tvecs[i][0][0],
