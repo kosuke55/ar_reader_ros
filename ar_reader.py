@@ -27,12 +27,12 @@ class Arreader():
         self.dictionary = self.aruco.getPredefinedDictionary(
             self.aruco.DICT_4X4_50)
         self.subscribe()
-        print("init")
+        rospy.loginfo("init")
 
     def load_camera_info(self):
         self.ci = rospy.wait_for_message(self.camera_info, CameraInfo)
         self.cm.fromCameraInfo(self.ci)
-        print("load camera info")
+        rospy.loginfo("load camera info")
 
     def subscribe(self):
         self.image_sub = rospy.Subscriber(self.INPUT_IMAGE,
@@ -40,7 +40,6 @@ class Arreader():
                                           self.callback)
 
     def callback(self, msg):
-        rospy.loginfo("called reader")
         img = self.bridge.imgmsg_to_cv2(msg, "bgr8")
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         params = cv2.aruco.DetectorParameters_create()
@@ -49,12 +48,12 @@ class Arreader():
             gray, self.dictionary, None, None,
             params, self.cm.K, self.cm.D)
         if(ids is None):
-            print("Not fonund")
+            rospy.logwarm("Not fonund")
             self.pub.publish(msg)
         else:
             rvecs, tvecs, _objPoints = self.aruco.estimatePoseSingleMarkers(
                 corners, self.ar_length, self.cm.K, self.cm.D)
-            print(ids)
+            rospy.loginfo("Fond No.{} marker".format(ids[0, 0]))
             for i in range(ids.size):
                 rot_matrix = np.eye(4)
                 rot_matrix[:3, :3] = cv2.Rodrigues(rvecs[i][0])[0]
