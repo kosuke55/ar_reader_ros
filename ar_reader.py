@@ -53,7 +53,7 @@ class Arreader():
         else:
             rvecs, tvecs, _objPoints = self.aruco.estimatePoseSingleMarkers(
                 corners, self.ar_length, self.cm.K, self.cm.D)
-            rospy.loginfo("Fond No.{} marker".format(ids[0, 0]))
+            rospy.loginfo("Found No.{} marker".format(ids[0, 0]))
             for i in range(ids.size):
                 rot_matrix = np.eye(4)
                 rot_matrix[:3, :3] = cv2.Rodrigues(rvecs[i][0])[0]
@@ -65,7 +65,6 @@ class Arreader():
                                       msg.header.stamp,
                                       "ar_frame_{}".format(ids[i][0]),
                                       self.ci.header.frame_id)
-
                 self.aruco.drawAxis(
                     img, self.cm.K, self.cm.D, rvecs[i], tvecs[i], 0.1)
 
